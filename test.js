@@ -140,3 +140,4 @@ undefined
 // and can use Prototype chains.. 
 undefined
 // Ultra - Sub.Prototype - Super.Prototype - Ultra.Prototype 
+//왜 test가 잘 안되는것 같냐...
