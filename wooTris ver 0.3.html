@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5 Multimedia Canvas</title>
+</head>
+
+<body>
+
+	<h1>Tetris Test</h1>
+
+	<canvas id="drawCanvas" width="300px" height="750x" style="border: 1px solid black">
+		이 문장은 사용자의 웹 브라우저가 canvas 요소를 지원하지 않을 때 나타납니다!
+	</canvas>
+
+	<script>
+		var paper = document.getElementById("drawCanvas");
+		var context = paper.getContext("2d");
+        
+
+
+      for ( var i = 0; i < 25; i++) {
+      	if (i <= 0 ) {
+        context.moveTo(0, 30);
+      	context.lineTo(500, 30);
+        context.stroke();
+        }
+
+        else {
+        context.moveTo(0, 30*i);
+      	context.lineTo(500, 30*i);
+        context.stroke();
+        
+        }
+        
+      }
+      1,000,000
+      
+       for ( var i = 0; i < 10; i++) {
+      	if (i <= 0 ) {
+        context.moveTo(30, 0);
+      	context.lineTo(30, 750);
+        context.stroke();
+        }
+
+        else {
+       context.moveTo(30*i, 0);
+      	context.lineTo(30*i, 750);
+        context.stroke();
+        }
+        
+      }
+      
+var grid = () => {
+      for ( var i = 0; i < 25; i++) {
+      	if (i <= 0 ) {
+        context.moveTo(0, 30);
+      	context.lineTo(500, 30);
+        context.stroke();
+        }
+
+        else {
+        context.moveTo(0, 30*i);
+      	context.lineTo(500, 30*i);
+        context.stroke();
+        }
+        
+      }
+
+      
+       for ( var i = 0; i < 10; i++) {
+      	if (i <= 0 ) {
+        context.moveTo(30, 0);
+      	context.lineTo(30, 750);
+        context.stroke();
+        }
+
+        else {
+       context.moveTo(30*i, 0);
+      	context.lineTo(30*i, 750);
+        context.stroke();
+        }
+        
+      }
+      }
+		//context.fillStyle = "rgba(150,0,200,1)";
+		//context.fillRect(, 0, 50, );
+     
+		//context.clearRect(30, 30, 150, 50);
+      
+      
+      
+	</script>
+
+    
+    <script>
+    var tetris = 
+       [[0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],                      
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0],] 
+//테트리스 배경을 배열로 정의함. 
+
+
+// 배열로 정의한 테트로미노 
+var Imino = 
+       [[0,0,1,0,0],
+       [0,0,1,0,0],   
+       [0,0,1,0,0],
+       [0,0,1,0,0]]    
+      
+      
+var Tmino = [[0,0,0,0,0],
+       [0,0,0,0,0],   
+       [0,1,1,1,0],
+       [0,0,1,0,0]]  
+
+var Jmino = [[0,0,0,0,0],
+       [0,0,1,0,0],   
+       [0,0,1,0,0],
+       [0,1,1,0,0]] 
+       
+var Lmino = [[0,0,0,0,0],
+       [0,0,1,0,0],   
+       [0,0,1,0,0],
+       [0,0,1,1,0]]
+
+
+var Smino = [[0,0,0,0,0],
+       [0,0,0,0,0],   
+       [0,0,1,1,0],
+       [0,1,1,0,0]]  
+
+var Zmino = [[0,0,0,0,0],
+       [0,0,0,0,0],   
+       [0,1,1,0,0],
+       [0,0,1,1,0]] 
+       
+var Omino = [[0,0,,0,0],
+       [0,1,1,0,0],   
+       [0,1,1,0,0],
+       [0,0,,0,0]]      
+
+
+//좌표 정의
+var coordinateX = [];
+var coordinateY = [];
+
+//push. 일단 좌표 하드코딩으로 구현. 일반화를 할 수 있을까. 좌표값을 변수로 할당해야 뭔가 일반화가 수월할듯 싶다. 
+//tetris[Y][X]
+function push(minoType){
+       switch(minoType){
+       case 'Tmino':   
+       tetris[1][3] = 1;
+       tetris[1][4] = 1;
+       tetris[1][5] = 1;
+       tetris[0][4] = 1;
+       console.table(tetris);
+       break
+       case 'Imino': 
+       tetris[0][3] = 1;
+       tetris[0][4] = 1;
+       tetris[0][5] = 1;
+       tetris[0][6] = 1;
+       console.table(tetris);
+       break
+       case 'Lmino': 
+       tetris[0][5] = 1;
+       tetris[1][3] = 1;
+       tetris[1][4] = 1;
+       tetris[1][5] = 1;
+       console.table(tetris);
+       break
+       case 'Jmino': 
+       tetris[0][3] = 1;
+       tetris[1][3] = 1;
+       tetris[1][4] = 1;
+       tetris[1][5] = 1;
+       console.table(tetris);
+       break
+       case 'Smino': 
+       tetris[0][4] = 1;
+       tetris[0][5] = 1;
+       tetris[1][4] = 1;
+       tetris[1][3] = 1;
+       console.table(tetris);
+       break
+       case 'Zmino': 
+       tetris[0][4] = 1;
+       tetris[0][3] = 1;
+       tetris[1][4] = 1;
+       tetris[1][5] = 1;
+       console.table(tetris);
+       break
+       case 'Omino': 
+       tetris[0][4] = 1;
+       tetris[0][5] = 1;
+       tetris[1][4] = 1;
+       tetris[1][5] = 1;
+       console.table(tetris);
+       break
+
+       default : switch (Math.floor(Math.random()*8)){
+              case 1 : console.log('Tmino');push('Tmino'); break
+              case 2 : console.log('Imino');push('Imino'); break
+              case 3 : console.log('Lmino');push('Lmino'); break
+              case 4 : console.log('Jmino');push('Jmino'); break
+              case 5 : console.log('Smino');push('Smino'); break
+              case 6 : console.log('Zmino');push('Zmino'); break
+              case 7 : console.log('Omino');push('Omino'); break
+       }
+}
+render();
+}
+
+
+
+//clear 
+function clear(){
+for(let i = 0; i < tetris.length; i++){
+       for(let j = 0; j < 10; j++){
+              if(tetris[i][j] != 0 ){tetris[i][j] = 0; } 
+       }
+}
+coordinateX = [];
+coordinateY = [];
+}
+
+
+
+
+//read
+function read(){
+for(let i = 0; i < tetris.length; i++){
+       for(let j = 0; j < 10; j++){
+              if(tetris[i][j] != 0 ){
+                     if(coordinateX.length <= 0 && coordinateY.length <=0 )
+                     {
+                            coordinateX[0] = j ;
+                            coordinateY[0] = i ;
+                     }
+                     else{
+                            coordinateX[coordinateX.length] = j ;
+                            coordinateY[coordinateY.length] = i ;
+
+                     }
+
+
+              }
+              }
+
+       } 
+       console.log('X:' + coordinateX);
+       console.log('Y:' + coordinateY);
+       }
+
+
+
+// render
+var render = () => {
+       var W = 30; //width 별도로 선언해 동적 렌터링을 미리 고려함. 
+       var H = 30; //height 
+       read();  
+       for(let i = 0; i < coordinateX.length; i++){
+              context.fillRect(coordinateX[i]*W, coordinateY[i]*H, W, H);
+       };      
+}
+
+
+// erase
+var erase = () => {
+       var currentX = [...coordinateX];
+       var currentY = [...coordinateY];
+       var W = 30; //width 
+       var H = 30; //height 
+       read();
+       for(let i = 0; i < coordinateX.length; i++){
+              context.clearRect(currentX[i]*W, currentY[i]*H, W, H);
+       };
+       grid();     //우선 격자 그리드를 살리기 위하여 grid 함수를 호출함. 
+}
+
+//movement
+
+//write
+function write(Y, X){
+       for(let i = 0; i < tetris.length; i++){   //Y
+              for(let y=0; y < Y.length; y++ ) {
+                     if(Y[y]== i){
+                            for(let j = 0; j < 10; j++){
+                                   for(let x=0; x < X.length; x++ ) {
+                                          if(X[x]== j && X[y]== j){   //cordinateY check...
+                                                 tetris[i][j] = 1;
+                                          }
+                                   }
+                            }      
+                     }      
+              }       
+       }
+}
+
+
+
+//down
+function down(){
+read(); 
+var currentX = [...coordinateX];
+var currentY = [...coordinateY];
+
+if (currentX.length == currentY.lenth){return}   //X-Y 좌표 관계 검증
+
+else
+{
+       erase();
+       clear(); 
+       console.log('before');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+       //calculation (down)
+       for(let i=0; i < currentY.length; i++){
+              currentY[i] = currentY[i] + 1 ; 
+       }
+       console.log('after');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+
+       write(currentY,currentX);
+       console.table(tetris);
+}       
+
+render(); 
+
+}
+
+       //어떤 미노인지 판별 하는 공식을 만들수 있을까.
+
+
+//right
+function right(){
+read(); 
+var currentX = [...coordinateX];
+var currentY = [...coordinateY];
+
+if (currentX.length == currentY.lenth){return}   //X-Y 좌표 관계 검증
+
+else
+{
+       erase();
+       clear(); 
+       console.log('before');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+       //calculation (right)
+       for(let i=0; i < currentX.length; i++){
+              currentX[i] = currentX[i] + 1 ; 
+       }
+       console.log('after');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+
+       write(currentY,currentX);
+       console.table(tetris);
+}
+render();        
+}
+
+
+//left
+function left(){
+read(); 
+var currentX = [...coordinateX];
+var currentY = [...coordinateY];
+
+if (currentX.length == currentY.lenth){return}   //X-Y 좌표 관계 검증
+
+else
+{
+       erase();
+       clear(); 
+       console.log('before');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+       //calculation (left)
+       for(let i=0; i < currentX.length; i++){
+              currentX[i] = currentX[i] - 1 ; 
+       }
+       console.log('after');
+       console.log('X:' + currentX);
+       console.log('Y:' + currentY);
+       
+       write(currentY,currentX);
+       console.table(tetris);
+}      
+render(); 
+}
+
+
+//spin
+ //x-y좌표를 바꾸면 회전하는거 같긴 하다만.. 
+//drop
+//stack
+//render
+//LineClear
+
+// 임시 키 할당
+
+
+// 행렬을 변환한다. p는 Piece의 인스턴스이다.
+/*for (let y = 0; y < p.shape.length; ++y) {
+  for (let x = 0; x < y; ++x) {
+    [p.shape[x][y], p.shape[y][x]] = 
+    [p.shape[y][x], p.shape[x][y]];
+  }
+}*/
+
+
+</script>
+	<p>
+	</p>
+
+</body>
+
+</html>

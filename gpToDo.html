@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>To-do List</title>
+	<link rel="stylesheet">
+    <style>
+        body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	text-align: center;
+	margin: 30px 0;
+}
+
+form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+input[type="text"] {
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 5px 0 0 5px;
+	border: 1px solid #ccc;
+}
+
+button {
+	padding: 10px;
+	font-size: 16px;
+	background-color: #4CAF50;
+	color: #fff;
+	border: none;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+	margin: 30px 0 0;
+}
+
+li {
+	padding: 10px;
+	margin: 10px 0;
+	border-radius: 5px;
+	background-color: #f2f2f2;
+}
+
+li span {
+	cursor: pointer;
+}
+
+li.complete {
+	background-color: #4CAF50;
+	color: #fff;
+}
+
+    </style>
+</head>
+<body>
+	<h1>To-do List</h1>
+	<form id="todo-form">
+		<input type="text" id="todo-input" placeholder="할 일을 입력하세요">
+		<button type="submit">추가</button>
+	</form>
+	<ul id="todo-list"></ul>
+	<script>const todoForm = document.querySelector("#todo-form");
+        const todoInput = document.querySelector("#todo-input");
+        const todoList = document.querySelector("#todo-list");
+        
+        let todos = [];
+        
+        function addTodo() {
+            event.preventDefault();
+            if (todoInput.value === "") return;
+            const todo = {
+                id: Date.now(),
+                text: todoInput.value,
+                completed: false
+            }
+            todos.push(todo);
+            renderTodos();
+            todoInput.value = "";
+        }
+        
+        function deleteTodo() {
+            const li = this.parentNode;
+            const index = todos.findIndex(todo => todo.id === parseInt(li.id));
+            todos.splice(index, 1);
+            renderTodos();
+        }
+        
+        function toggleComplete() {
+            const li = this.parentNode;
+            const index = todos.findIndex(todo => todo.id === parseInt(li.id));
+            todos[index].completed = !todos[index].completed;
+            li.classList.toggle("complete");
+        }
+        
+        function renderTodos() {
+            todoList.innerHTML = "";
+            todos.forEach(todo => {
+                const li = document.createElement("li");
+                li.id = todo.id;
+                li.innerText = todo.text;
+                if (todo.completed) {
+                    li.classList.add("complete");
+                }
+                const deleteButton = document.createElement("span");
+                deleteButton.innerText = "X";
+                deleteButton.addEventListener("click", deleteTodo);
+                const toggleButton = document.createElement("span");
+                toggleButton.innerText = "✓";
+                toggleButton.addEventListener("click", toggleComplete);
+                li.appendChild(deleteButton);
+                li.appendChild(toggleButton);
+                todoList.appendChild(li);
+            });
+        }
+        
+        todoForm.addEventListener("submit", addTodo);
+        </script>
+</body>
+</html>
