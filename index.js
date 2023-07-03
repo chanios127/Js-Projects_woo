@@ -29,12 +29,6 @@ MongoClient.connect('mongodb+srv://chanios127:CW2KfYsHFFF7K7uG@chanios.9nrmsnz.m
 
 
 
-
-
-
-
-
-
 app.get('/', function(req, res) { 
     res.sendFile(__dirname +'/index.html')
   });
@@ -51,8 +45,8 @@ app.get('/write', function(req, res) {
     res.sendFile(__dirname +'/write.html')
   });
 
-  app.post('/add', function(req, res){
-    console.log(req.body);
-    res.send('전송완료')
-  });
+app.post('/add', function(req, res){
+  console.log(req.body);
+  res.send('전송완료')
+});
 
