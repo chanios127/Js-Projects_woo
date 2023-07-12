@@ -1,45 +1,42 @@
-
-Public Class Temp
-    Private Sub btn_matuse_Click(sender As System.Object, e As System.EventArgs) Handles btn_matuse.Click
-           Dim Pdcd As String = dw_edit.GetItem(1, "am_pdcd")
-           Dim Sno As String = dw_edit.GetItem(1, "am_sno")
-           Dim custCd As String = dw_edit.GetItem(1, "am_custcd")
-           Dim obj As Object, frm As Object
-
-           obj = LzxpParams.ParentControl.LoadModalForm("SL_ASMasterNewB", "SL_ASMasterNewB")
-           If IsNothing(obj) Then Return
-           frm = obj.GetCallMatUseEdit()
-           If IsNothing(frm) Then Return
-           frm.Call_Init(Pdcd, Sno, custCd, dw_pdlist)
-
-           If frm.ShowDialog <> DialogResult.OK Then Return
-
-           'Dim frm As New frmCallMatUse
-           'frm.Call_Init(Pdcd, Sno, custCd, dw_pdlist)
-           'frm.ShowDialog()
-    End Sub
-
-            v_DwGrid.SetItem(nRow, "an_pdcd", dw_list.GetItem(iRow, "pd_pdcd"))
-            v_DwGrid.SetItem(nRow, "cc_pdnm", dw_list.GetItem(iRow, "pd_pdnm"))
-            v_DwGrid.SetItem(nRow, "an_pdfg", dw_list.GetItem(iRow, "pd_pdfg"))
-            v_DwGrid.SetItem(nRow, "an_expqty", dw_list.GetItem(iRow, "cc_Qty"))
+        If LCase(colName) = "btn_matuse" Then
+            Dim obj As Object, frm As Object
+            obj = LzxpParams.ParentControl.LoadModalForm("SL_ASMasterNewB", "SL_ASMasterNewB")
+            If IsNothing(obj) Then Return
+            frm = obj.GetCallMatUseEdit()
+            If IsNothing(frm) Then Return
+            frm.Call_Init(v_pdcd, v_SNo, v_custcd, dw_list)
+            If frm.ShowDialog <> DialogResult.OK Then Return
 
 
 
-    Private Sub btn_MatCD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Btn_MatCd.Click
-           Dim obj As Object = LzxpParams.ParentControl.LoadModalForm("PO_PrjBomBreqNote", "PO_PrjBomBreqNote")
-           If IsNothing(obj) Then Return
-           Dim frm As New frmModalForm
-           frm.WindowState = FormWindowState.Maximized
-           obj.Call_Init(dw_edit.GetItem("am_pdcd"), dw_pdlist, "DE")
-           frm.SetForm(obj)
-           frm.ShowDialog()
-    End Sub
 
-                v_DwGrid.SetItem(jRow, "an_pdcd", dw_list2.GetItem(iRow, "bs_cpdcd"))
-                v_DwGrid.SetItem(jRow, "cc_pdnm", dw_list2.GetItem(iRow, "cc_pdnm"))
-                v_DwGrid.SetItem(jRow, "pd_std", dw_list2.GetItem(iRow, "cc_std"))
-                v_DwGrid.SetItem(jRow, "pd_spec1", dw_list2.GetItem(iRow, "cc_spec1"))
-                v_DwGrid.SetItem(jRow, "pd_spec2", dw_list2.GetItem(iRow, "cc_spec2"))
-                v_DwGrid.SetItem(jRow, "pd_spec3", dw_list2.GetItem(iRow, "cc_spec3"))
-End Class
+
+        ElseIf LCase(colName) = "btn_matcd" Then
+            Dim obj As Object = LzxpParams.ParentControl.LoadModalForm("PO_PrjBomBreqNote", "PO_PrjBomBreqNote")
+            If IsNothing(obj) Then Return
+            Dim frm As New frmModalForm
+            frm.WindowState = FormWindowState.Maximized
+            obj.Call_Init(v_pdcd, dw_list, "DE")
+            frm.SetForm(obj)
+            frm.ShowDialog()
+
+
+       
+       '조건에 따른 datawindow control 분리
+       Dim #formName As String = Me.Name
+       If v_sCallFg = "TypeA" Then
+            dw_List.Init_Form(#formName, #datawindowNameA)
+       Else IF v_sCallFg = "TypeB" Then
+            dw_BadList.Init_Form(#formName, #datawindowNameB)
+       Else 
+              dw_list.Init_Form()
+       End If
+
+
+
+              v_DwGrid.SetItem(nRow, "bl_pdcd", dw_list.GetItem(iRow, "cc_pdcd"))
+                v_DwGrid.SetItem(nRow, "pd_pdnm", dw_list.GetItem(iRow, "cc_pdnm"))
+                v_DwGrid.SetItem(nRow, "pd_std", dw_list.GetItem(iRow, "cc_pdstd"))
+                v_DwGrid.SetItem(nRow, "bl_sno", dw_list.GetItem(iRow, "cc_SNo"))
+
+                'std, sno 추가 예정
