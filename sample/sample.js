@@ -1,24 +1,43 @@
-//전역 변수 선언 ---------------------------------------------------------------
-var products;  //상품목록
-var sum;    //최종합게 출력용
+/* ===========================================================================
+   내  용 : Drag & Drop Event Wep Page Source Logics...
+   작성일 : 
+   작성자 : chanios127
+   수정일 : 
+   수정자 : 
+   =========================================================================== */
 
-// 카트 제품목록, 가격 합계 계산용 가격 및 수량, 영수증용 제품명 변수 선언
-var cart = []; //수량
-var amount = []; //금액
-var value = []; //선택자 생성용
-var productname = []; //상품명
-var brand = []; //상호
-var price = []; // 제품 가격
+
+   
+//전역 변수 선언 ---------------------------------------------------------------
+	var products;  //상품목록
+	var sum;    //최종합게 출력용
+
+	// 카트 제품목록, 가격 합계 계산용 가격 및 수량, 영수증용 제품명 변수 선언
+	var cart = []; //수량
+	var amount = []; //금액
+	var value = []; //선택자 생성용
+	var productname = []; //상품명
+	var brand = []; //상호
+	var price = []; // 제품 가격
+//전역 변수 선언 ---------------------------------------------------------------
+
+
+
+
 
 /* 데이터 불러와서 상품 목록 뿌려주기 ================================================================================*/
 document.querySelectorAll('.cards')[0].innerHTML = ''; // 생성전 초기화
+//fetch API는 실제로 Online 요청을 할 때에만 불러올 수 있기 때문에 로컬 Json File을 불러올수 있도록 재설정. 
+// fetch('../store.json')
+// 	.then((res) => res.json())
+// 	.then(function (data) {
+// 		products = data.products;
+//}); 
+//Store.json 파일에서 데이터를 가져온다.
+let testData = JSON.parse(JSON.stringify(Store));
+products = testData.products
 
-fetch('store.json')
-	.then((res) => res.json())
-	.then(function (data) {
-		products = data.products;
 
-	
 //상품 요소 동적 생성 ==============================================================================
 	//생성과 동시에 관련 이벤트를 할당하기때문에 모든 이벤트 코드는 ForEach 문 안에서 실행됨.	
 	products.forEach((a, i) => {
@@ -45,64 +64,70 @@ fetch('store.json')
 //드래그 & 드롭 이벤트  및 담기 버튼 이벤트바인딩===============================================================================			
 	//담기 버튼 이벤트 --------------------------------------------------------------
 			document.querySelectorAll('.putin')[i].addEventListener('click', function (e) {
-							cart[i] += 1; //수량체크
-			//장바구니용 카드 HTML----------(class : cart-card)------------------------------------------------------
-			var templet2 = `<div class="card cart-card" id = "card${i}"draggable = "false" >
-					<img src="${products[i].photo}" class="card-img-top" alt="..." />
-					<div class="card-body">
-						<h5 class="card-title">${products[i].title}</h5>
-						<p class="card-text">${products[i].brand}</p>
-						<p class="card-price">${products[i].price}</p>
-						<input class = "cardEa" id = "carTd${i}"value ="${cart[i]}"></input>
-					</div>
-				</div>`;
-			//장바구니용 카드 HTML------------------------------------------------------------
-			
-			//카드는 최초에만 생성되고 이미 있을 경우 수량을 추가함---------------------------------------
-			if (cart[i] <= 1) {
-				document.querySelectorAll('.cart')[0].insertAdjacentHTML('beforeend', templet2);
-				value[i] = document.querySelector(`#carTd${i}`); //쿼리 셀렉터 미리 선언
-				amount[i] = cart[i] * products[i].price;
-				productname[i] = products[i].title;
-				brand[i] = products[i].brand;
-				price[i] = products[i].price;
-				//합계 불러오기
+				cart[i] += 1; //수량체크 
+				//인덱스가 고정되어 있어서 모든 제품의 목록을 감안하게 되어 있음. 
+				// 그러나 장바구니의 경우 모든 제품을 담진 않기 때문에 
+				// 모든 제품에 수량 배열의 인덱스가 필요하지는 않음. 
+				// 수량이 생길때마다 삽입하는 방식을 고려해야함. 
+				// 이벤트 리스너 바인딩과 동시에 장바구니 카드 생성 로직도 같이 되어 있는데
+				// 별도로 함수와 할 수 있는지 검토가 필요함. 
+				//장바구니용 카드 HTML----------(class : cart-card)------------------------------------------------------
+				var templet2 = `<div class="card cart-card" id = "card${i}"draggable = "false" >
+						<img src="${products[i].photo}" class="card-img-top" alt="..." />
+						<div class="card-body">
+							<h5 class="card-title">${products[i].title}</h5>
+							<p class="card-text">${products[i].brand}</p>
+							<p class="card-price">${products[i].price}</p>
+							<input class = "cardEa" id = "carTd${i}"value ="${cart[i]}"></input>
+						</div>
+					</div>`;
+				//장바구니용 카드 HTML------------------------------------------------------------
+				
+				//카드는 최초에만 생성되고 이미 있을 경우 수량을 추가함---------------------------------------
+				if (cart[i] <= 1) {
+					document.querySelectorAll('.cart')[0].insertAdjacentHTML('beforeend', templet2);
+					value[i] = document.querySelector(`#carTd${i}`); //쿼리 셀렉터 미리 선언
+					amount[i] = cart[i] * products[i].price;
+					productname[i] = products[i].title;
+					brand[i] = products[i].brand;
+					price[i] = products[i].price;
+					//합계 불러오기
 
-				sum = amount.reduce(function add(sum, currValue) {
-					return sum + currValue;
-				}, 0);
-				document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
+					sum = amount.reduce(function add(sum, currValue) {
+						return sum + currValue;
+					}, 0);
+					document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
 
-				value[i].addEventListener('input', function () {
+					value[i].addEventListener('input', function () {
+						//합계 불러오기
+						sum = amount.reduce(function add(sum, currValue) {
+							return sum + currValue;
+						}, 0);
+						document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
+						cart[i] = Number(value[i].value);
+						amount[i] = cart[i] * products[i].price;
+						productname[i] = products[i].title;
+						brand[i] = products[i].brand;
+						price[i] = products[i].price;
+					}); //이벤트 리스너 미리 선언
+				} 
+				// 이미 생성된 경우 ---------------------------------------------------------------	
+				else {
+					value[i].value = cart[i];
+					amount[i] = cart[i] * products[i].price;
+					productname[i] = products[i].title;
+					brand[i] = products[i].brand;
+					price[i] = products[i].price;
 					//합계 불러오기
 					sum = amount.reduce(function add(sum, currValue) {
 						return sum + currValue;
 					}, 0);
 					document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
-					cart[i] = Number(value[i].value);
-					amount[i] = cart[i] * products[i].price;
-					productname[i] = products[i].title;
-					brand[i] = products[i].brand;
-					price[i] = products[i].price;
-				}); //이벤트 리스너 미리 선언
-			} 
-			// 이미 생성된 경우 ---------------------------------------------------------------	
-			else {
-				value[i].value = cart[i];
-				amount[i] = cart[i] * products[i].price;
-				productname[i] = products[i].title;
-				brand[i] = products[i].brand;
-				price[i] = products[i].price;
-				//합계 불러오기
-				sum = amount.reduce(function add(sum, currValue) {
-					return sum + currValue;
-				}, 0);
-				document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
-			}//else 끝 
+				}//else END 
 			});
 			
 			
-		});
+		});	//products.forEach((a, i) END
 
 
 	//드래그 & 드롭 이벤트 ----------------------------------------------------------------------------------
@@ -171,7 +196,10 @@ fetch('store.json')
 			}//else 끝 
 			
 		});
-	});
+	//});	//fetch('../store.json').then(function (data) END
+//상품 요소 동적 생성 ==============================================================================END---
+
+
 
 
 
@@ -181,7 +209,10 @@ function coloring(word, text, re_text) {
 	text = text.replace(regexAllCase, `${re_text}`);
 	return text;
 }
-//==========================================================================================
+// 텍스트 색상 변환 함수 선언=========================================================================END---
+
+
+
 
 //검색 기능=============================================================================================
 document.querySelectorAll('.filter')[0].addEventListener('input', function () {
@@ -190,7 +221,7 @@ document.querySelectorAll('.filter')[0].addEventListener('input', function () {
 
 	// 반복문 활용. 상품요소의 갯수만큼 반복. + 키워드가 있을경우 pass, 없을 경우 display none;
 	var limit = document.querySelectorAll('.product-card').length;
-	for (var i = 0; i < limit; i++) {
+	for (let i = 0; i < limit; i++) {
 		//검색할 문자열 선언
 		var text = document.querySelectorAll('.card-title')[i].innerText +
 					document.querySelectorAll('.card-text')[i].innerText;
@@ -230,7 +261,7 @@ document.querySelectorAll('.filter')[0].addEventListener('input', function () {
 		else if (keyword == '') {
 			var R = document.querySelectorAll('.product-card').length;
 
-			for (var i = 0; i < R; i++) {
+			for (let i = 0; i < R; i++) {
 				document.querySelectorAll('.product-card')[i].style.display = 'block';
 				var text1 = document.querySelectorAll('.card-title')[i].innerHTML;
 				var text2 = document.querySelectorAll('.card-text')[i].innerHTML;
@@ -256,6 +287,11 @@ document.querySelectorAll('.filter')[0].addEventListener('input', function () {
 	}
 	//공백 정제는 되지 않았음. 색상 변경 로직과 검색어가 제거 되었을 경우를 고려해야함. 23-02-20 해결된 것으로 보임 
 });
+//검색 기능=============================================================================================END---
+
+
+
+
 
 //구매하기 버튼 액션=================================================================================
 document.querySelectorAll('.buy')[0].addEventListener('click', function () {
@@ -264,6 +300,7 @@ document.querySelectorAll('.buy')[0].addEventListener('click', function () {
 document.querySelectorAll('.close')[0].addEventListener('click', function () {
 	document.querySelectorAll('.black-bg')[0].classList.remove('show1');
 });
+
 
 //이름과 연락처 받아오기====================================================================================
 var name;
@@ -274,6 +311,7 @@ document.querySelector('#name').addEventListener('input', function () {
 document.querySelector('#telephone').addEventListener('input', function () {
 	telephone = document.querySelector('#telephone').value;
 });
+
 
 //구매완료 버튼 누를시 나오는 영수증=====================================================================
 document.querySelectorAll('.submit')[0].addEventListener('click', function () {
@@ -307,6 +345,7 @@ document.querySelectorAll('.submit')[0].addEventListener('click', function () {
 	c.font = '35px';
 	c.fillText(`총 합계 : ${sum}`, 30, px);
 });
+
 
 
 // 영수증 닫기 버튼===========================================================================================
