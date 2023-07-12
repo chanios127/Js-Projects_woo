@@ -134,19 +134,10 @@ console.log(a.id);
 
 //Prototype은 객체의 원형 , 함수는 객체 생성자 함수 도 객체. 
 //Prototype Property에 저장된 속성들은 생성자를 통해서 객체가 만들어질때 그 객체에 연결된다.
-undefined
+
 //when using new function ().....
 //copy and past all properties of function's Prototype. 
 // and can use Prototype chains.. 
-undefined
+
 // Ultra - Sub.Prototype - Super.Prototype - Ultra.Prototype 
 //왜 test가 잘 안되는것 같냐...
-
-
-// Mac_chanios127_M1 Test...
-//
-//
-//fasdjfad;ljf;asl
-// what is fork??
-
-var test11 = "what is fork??"
