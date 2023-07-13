@@ -1,10 +1,12 @@
 /* ===========================================================================
-   내  용 : Drag & Drop Event Wep Page Source Logics...
-   작성일 : 
-   작성자 : chanios127
-   수정일 : 
-   수정자 : 
-   =========================================================================== */
+	Name : sample.js
+	Content : Drag & Drop Event Wep Page Source Logics...
+	GenDate : 
+	GenUser: chanios127
+	EditDate : 23-07-13
+	EditUser : chanios127
+	Version : 1.0
+=========================================================================== */
 
 
    
@@ -38,10 +40,48 @@ let testData = JSON.parse(JSON.stringify(Store));
 products = testData.products
 
 
+
+
+
+function genCardEvent(index, mode = "cards") {
+    let btntext;
+    let cardCSSClass; 
+    let dragFg;
+
+    if (mode = "cards" ){
+        btntext = `<a href="#" class="btn btn-primary putin">담기</a>`
+        cardCSSClass = `product-card`
+        dragFg = true
+    }
+    else if(mode = "cart"){
+        btntext = `<input class = "cardEa" id = "carTd${index}"value ="${cart[index]}"></input>`
+        cardCSSClass = `cart-card`
+        dragFg = false
+    }
+//카드 템플릿 
+let templet = `<div class="card ${cardCSSClass}" id = "card${index}"draggable = "${dragFg}" >
+					<img src="${products[index].photo}" class="card-img-top" alt="..." />
+                    <div class="card-body">
+                        <h5 class="card-title">${products[index].title}</h5>
+                        <p class="card-text">${products[index].brand}</p>
+                        <p class="card-price">${products[index].price}</p>
+						${btntext}
+					</div>
+				</div>`;
+    if (mode = "cards" ){
+        document.querySelectorAll(`.${mode}`)[0].insertAdjacentHTML('beforeend', templet);
+        cart[index] = 0; //수량 미리 체크 
+        amount[index] = 0; //금액 미리 체크
+        document.querySelectorAll('.putin')[index].addEventListener('click', function (e) {
+            genCardEvent(index,cart)
+        });
+    }
+}
+
 //상품 요소 동적 생성 ==============================================================================
 	//생성과 동시에 관련 이벤트를 할당하기때문에 모든 이벤트 코드는 ForEach 문 안에서 실행됨.	
 	products.forEach((a, i) => {
-		//장바구니용 카드 HTML----------(class : product-card)------------------------------------------------------
+		// 카드 HTML----------(class : product-card)------------------------------------------------------
 			var templet = `<div class="card product-card" id = "card${i}"draggable = "true" >
 					<img src="${products[i].photo}" class="card-img-top" alt="..." />
 					<div class="card-body">
@@ -51,7 +91,7 @@ products = testData.products
 						<a href="#" class="btn btn-primary putin">담기</a>
 					</div>
 				</div>`;
-		//장바구니용 카드 HTML------------------------------------------------------------------------------------
+		// 카드 HTML------------------------------------------------------------------------------------
 			document.querySelectorAll('.cards')[0].insertAdjacentHTML('beforeend', templet);
 			cart[i] = 0; //수량 미리 체크 
 			amount[i] = 0; //금액 미리 체크
@@ -63,28 +103,29 @@ products = testData.products
 			});
 //드래그 & 드롭 이벤트  및 담기 버튼 이벤트바인딩===============================================================================			
 	//담기 버튼 이벤트 --------------------------------------------------------------
+	
 			document.querySelectorAll('.putin')[i].addEventListener('click', function (e) {
-				cart[i] += 1; //수량체크 
+				
 				//인덱스가 고정되어 있어서 모든 제품의 목록을 감안하게 되어 있음. 
 				// 그러나 장바구니의 경우 모든 제품을 담진 않기 때문에 
 				// 모든 제품에 수량 배열의 인덱스가 필요하지는 않음. 
 				// 수량이 생길때마다 삽입하는 방식을 고려해야함. 
 				// 이벤트 리스너 바인딩과 동시에 장바구니 카드 생성 로직도 같이 되어 있는데
 				// 별도로 함수와 할 수 있는지 검토가 필요함. 
+				// 장바구니 카드 생성 루틴 별도 함수화 후, 이벤트 바인딩만 각각 버튼, 드래그 & 드롭시에 하도록 변경해야함. 
+				//카드는 최초에만 생성되고 이미 있을 경우 수량을 추가함---------------------------------------
 				//장바구니용 카드 HTML----------(class : cart-card)------------------------------------------------------
 				var templet2 = `<div class="card cart-card" id = "card${i}"draggable = "false" >
-						<img src="${products[i].photo}" class="card-img-top" alt="..." />
-						<div class="card-body">
-							<h5 class="card-title">${products[i].title}</h5>
-							<p class="card-text">${products[i].brand}</p>
-							<p class="card-price">${products[i].price}</p>
-							<input class = "cardEa" id = "carTd${i}"value ="${cart[i]}"></input>
-						</div>
-					</div>`;
+				<img src="${products[i].photo}" class="card-img-top" alt="..." />
+				<div class="card-body">
+					<h5 class="card-title">${products[i].title}</h5>
+					<p class="card-text">${products[i].brand}</p>
+					<p class="card-price">${products[i].price}</p>
+					<input class = "cardEa" id = "carTd${i}"value ="${cart[i]}"></input>
+				</div>
+				</div>`;
 				//장바구니용 카드 HTML------------------------------------------------------------
-				
-				//카드는 최초에만 생성되고 이미 있을 경우 수량을 추가함---------------------------------------
-				if (cart[i] <= 1) {
+				if (cart[i] < 1) {
 					document.querySelectorAll('.cart')[0].insertAdjacentHTML('beforeend', templet2);
 					value[i] = document.querySelector(`#carTd${i}`); //쿼리 셀렉터 미리 선언
 					amount[i] = cart[i] * products[i].price;
@@ -113,7 +154,7 @@ products = testData.products
 				} 
 				// 이미 생성된 경우 ---------------------------------------------------------------	
 				else {
-					value[i].value = cart[i];
+					//value[i].value = cart[i];
 					amount[i] = cart[i] * products[i].price;
 					productname[i] = products[i].title;
 					brand[i] = products[i].brand;
@@ -124,6 +165,8 @@ products = testData.products
 					}, 0);
 					document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
 				}//else END 
+				cart[i] += 1; //수량체크 
+				value[i].value = cart[i];
 			});
 			
 			
@@ -140,7 +183,7 @@ products = testData.products
 		// 드래그한 이미지 생성----------------------------------------------------------
 			var i = e.dataTransfer.getData('text');
 
-			cart[i] += 1; //수량체크
+			
 			//장바구니용 카드 HTML-----(class : cart-card)-----------------------------------------------------
 			var templet2 = `<div class="card cart-card" id = "card${i}"draggable = "false" >
 					<img src="${products[i].photo}" class="card-img-top" alt="..." />
@@ -148,13 +191,13 @@ products = testData.products
 						<h5 class="card-title">${products[i].title}</h5>
 						<p class="card-text">${products[i].brand}</p>
 						<p class="card-price">${products[i].price}</p>
-						<input class = "cardEa" id = "carTd${i}"value ="${cart[i]}"></input>
+						<input class = "cardEa" id = "carTd${i}" value ="${cart[i]}"></input>
 					</div>
 				</div>`;
 			//장바구니용 카드 HTML-------------------------------------------------------------------
 			
 		//카드는 최초에만 생성되고 이미 있을 경우 수량을 추가함---------------------------------------	
-			if (cart[i] <= 1) {
+			if (cart[i] < 1) {
 				document.querySelectorAll('.cart')[0].insertAdjacentHTML('beforeend', templet2);
 				value[i] = document.querySelector(`#carTd${i}`); //쿼리 셀렉터 미리 선언
 				amount[i] = cart[i] * products[i].price;
@@ -183,7 +226,7 @@ products = testData.products
 			} 
 			// 이미 생성된 경우 ---------------------------------------------------------------	
 			else {
-				value[i].value = cart[i];
+				//value[i].value = cart[i];
 				amount[i] = cart[i] * products[i].price;
 				productname[i] = products[i].title;
 				brand[i] = products[i].brand;
@@ -194,7 +237,8 @@ products = testData.products
 				}, 0);
 				document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
 			}//else 끝 
-			
+			cart[i] += 1; //수량체크
+			value[i].value = cart[i];
 		});
 	//});	//fetch('../store.json').then(function (data) END
 //상품 요소 동적 생성 ==============================================================================END---
