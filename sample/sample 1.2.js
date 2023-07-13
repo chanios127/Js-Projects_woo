@@ -19,9 +19,6 @@ class ProductList extends Array {       //클래스를 이용해 명세 정의
         }, 0);
         document.querySelectorAll('.sum')[0].innerHTML = `합계 ${sum}`;
     }
-    add(product){
-        this.push(product);
-    }
 }
 let cart = new ProductList();       //장바구니 리스트 정의 
 
