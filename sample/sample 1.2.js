@@ -195,7 +195,8 @@ document.querySelectorAll('.filter')[0].addEventListener('input', function () {
 		//텍스트가 없거나 공백일 경우 제외함.
 		if (text.includes(keyword) && !(keyword == '' || keyword.includes(' '))) {
 			document.querySelectorAll('.product-card')[i].style.display = 'block';
-			var text1 = document.querySelectorAll('.card-title')[i].innerHTML;
+			var text1 = document.querySelectorAll('.card-title')[i]
+			.innerHTML;
 			var text2 = document.querySelectorAll('.card-text')[i].innerHTML;
 
 			//색상 변경 로직 이미 변경된 경우 고려해, 초기화  먼저 진행 후, 변환 시도
